@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 11:41:32 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/05 15:59:24 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/05 19:12:19 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,8 @@ void	philo_start(t_philo *philo)
 		else if (philo->state == 2
 			&& action_dif >= philo->dat->sleep_time)
 			philo_think(philo);
-		usleep(100);
+		usleep(10);
 	}
-	free(philo);
 }
 
 void	philo_eat(t_philo *philo)
@@ -58,8 +57,9 @@ void	philo_eat(t_philo *philo)
 		if (action_dif >= philo->dat->die_time
 			||action_dif >= philo->dat->eat_time)
 			break ;
-		usleep(100);
+		usleep(10);
 	}
+	philo->eaten++;
 	pthread_mutex_unlock(&(philo->dat->forks[philo->num - 1]));
 	pthread_mutex_unlock(
 		&(philo->dat->forks[philo->num % philo->dat->num_philo]));

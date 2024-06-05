@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:11:15 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/05 13:41:30 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/05 19:00:16 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ typedef unsigned int	t_uint;
 typedef pthread_mutex_t	t_mutex;
 typedef struct timeval	t_tv;
 
+typedef struct s_philo	t_philo;
+
 typedef struct s_philo_dat
 {
 	int			num_philo;
@@ -38,6 +40,7 @@ typedef struct s_philo_dat
 	t_mutex		*forks;
 	pthread_t	*threads;
 	t_tv		start_time;
+	t_philo		*philos;
 }	t_philo_dat;
 
 typedef struct s_philo
@@ -64,7 +67,7 @@ void		philo_think(t_philo *philo);
 // libft functions
 t_uint		ft_atou_strict(const char *str, int *err);
 int			ft_min(int a, int b);
-int			time_dif(t_tv time);
+int			time_dif(t_tv start);
 void		print_action(t_philo *philo, char *action);
 
 #endif

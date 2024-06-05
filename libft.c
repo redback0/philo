@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:56:04 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/05 13:16:03 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/05 19:00:45 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int	time_dif(t_tv start)
 	int		out;
 
 	gettimeofday(&time, NULL);
-	out = (time.tv_sec - start.tv_sec) * 1000000;
-	out += (time.tv_usec - start.tv_usec);
+	out = (time.tv_sec - start.tv_sec) * 1000;
+	out += (time.tv_usec - start.tv_usec) / 1000;
 	return (out);
 }
 
@@ -52,6 +52,6 @@ void	print_action(t_philo *philo, char *action)
 {
 	int		ms;
 
-	ms = time_dif(philo->dat->start_time) / 1000;
+	ms = time_dif(philo->dat->start_time);
 	printf("%8d %d %s\n", ms, philo->num, action);
 }
