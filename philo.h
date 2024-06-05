@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:11:15 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/03 16:16:06 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/05 13:41:30 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,27 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/wait.h>
+# include <sys/time.h>
 # include <pthread.h>
 
 # define USAGE "./philo NUM_PHILOS TIME_TO_DIE TIME_TO_EAT TIME_TO_SLEEP \
 [TIMES_TO_EAT]\n"
 
+typedef unsigned int	t_uint;
 typedef pthread_mutex_t	t_mutex;
+typedef struct timeval	t_tv;
 
 typedef struct s_philo_dat
 {
-	int		num_philo;
-	int		die_time;
-	int		eat_time;
-	int		sleep_time;
-	int		each_eat;
-	t_mutex	*forks;
+	int			num_philo;
+	int			die_time;
+	int			eat_time;
+	int			sleep_time;
+	int			to_eat;
+	char		death;
+	t_mutex		*forks;
+	pthread_t	*threads;
+	t_tv		start_time;
 }	t_philo_dat;
 
 typedef struct s_philo
@@ -39,14 +45,26 @@ typedef struct s_philo
 	int			num;
 	t_philo_dat	*dat;
 	int			eaten;
+	char		state;
+	t_tv		action_time;
+	t_tv		last_meal;
 }	t_philo;
 
-int		set_philo_dat(int ac, char **av, t_philo_dat *dat);
-void	init_threads(t_philo_dat *dat);
+int			set_philo_dat(int ac, char **av, t_philo_dat *dat);
+void		delete_dat(t_philo_dat *dat);
+pthread_t	*init_threads(t_philo_dat *dat);
+void		philo_manage(t_philo_dat *dat);
 
-void	thread_func(t_philo *dat);
+// philo functions
+void		philo_start(t_philo *philo);
+void		philo_eat(t_philo *philo);
+void		philo_sleep(t_philo *philo);
+void		philo_think(t_philo *philo);
 
 // libft functions
-int		ft_atoi_strict(const char *str, int *err);
+t_uint		ft_atou_strict(const char *str, int *err);
+int			ft_min(int a, int b);
+int			time_dif(t_tv time);
+void		print_action(t_philo *philo, char *action);
 
 #endif
