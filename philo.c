@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:29:24 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/05 15:21:05 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:59:57 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,5 @@ pthread_t	*init_threads(t_philo_dat *dat)
 		pthread_create(&threads[i - 1], NULL,
 			(void *)(void *)philo_start, philo);
 	}
-	return(threads);
+	return (threads);
 }

@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 11:41:32 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/05 15:25:36 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:59:24 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	philo_start(t_philo *philo)
 void	philo_eat(t_philo *philo)
 {
 	int	action_dif;
+
 	pthread_mutex_lock(&(philo->dat->forks[philo->num - 1]));
 	print_action(philo, "has taken a fork");
 	pthread_mutex_lock(
