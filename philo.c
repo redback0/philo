@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:29:24 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/05 13:53:01 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:21:05 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ pthread_t	*init_threads(t_philo_dat *dat)
 		philo->num = ++i;
 		philo->eaten = 0;
 		philo->state = 0;
+		philo->last_meal = dat->start_time;
 		pthread_create(&threads[i - 1], NULL,
 			(void *)(void *)philo_start, philo);
 	}
