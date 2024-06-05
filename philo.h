@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:11:15 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/05 19:00:16 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/05 20:27:30 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ void		philo_think(t_philo *philo);
 
 // libft functions
 t_uint		ft_atou_strict(const char *str, int *err);
-int			ft_min(int a, int b);
-int			time_dif(t_tv start);
-void		print_action(t_philo *philo, char *action);
+int			time_dif(t_tv start, t_tv *time);
+void		print_action(t_philo *philo, t_tv *time, char *action);
 
 #endif
