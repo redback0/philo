@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:29:24 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/05 19:17:44 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/06 13:34:20 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	set_philo_dat(int ac, char **av, t_philo_dat *dat)
 		return (err);
 	dat->philos = (t_philo *)malloc(dat->num_philo * sizeof(*(dat->philos)));
 	dat->forks = (t_mutex *)malloc(dat->num_philo * sizeof(*(dat->forks)));
+	dat->fork_state = (char *)malloc(dat->num_philo * sizeof(char));
 	i = 0;
 	while (i < dat->num_philo)
 		if (pthread_mutex_init(dat->forks + i++, NULL))
@@ -76,6 +77,7 @@ void	delete_dat(t_philo_dat *dat)
 	free(dat->forks);
 	free(dat->philos);
 	free(dat->threads);
+	free(dat->fork_state);
 }
 
 pthread_t	*init_threads(t_philo_dat *dat)
