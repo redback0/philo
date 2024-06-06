@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:29:24 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/06 16:41:58 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/06 19:59:05 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ int	main(int ac, char *av[])
 	if (ac < 5 || ac > 7)
 		return (printf(USAGE), 0);
 	set_philo_dat(ac, av, &dat);
+	i = 0;
+	while (i < dat.num_philo)
+		dat.fork[i++] = 0;
 	dat.threads = init_threads(&dat);
 	i = 0;
 	if (dat.to_eat > 0)
