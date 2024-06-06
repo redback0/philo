@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:29:24 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/06 13:34:20 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/06 16:41:58 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,15 @@ int	set_philo_dat(int ac, char **av, t_philo_dat *dat)
 	if (err)
 		return (err);
 	dat->philos = (t_philo *)malloc(dat->num_philo * sizeof(*(dat->philos)));
-	dat->forks = (t_mutex *)malloc(dat->num_philo * sizeof(*(dat->forks)));
-	dat->fork_state = (char *)malloc(dat->num_philo * sizeof(char));
+	dat->fork_mutex = (t_mutex *)malloc(dat->num_philo
+			* sizeof(*(dat->fork_mutex)));
+	dat->fork = (char *)malloc(dat->num_philo * sizeof(char));
 	i = 0;
 	while (i < dat->num_philo)
-		if (pthread_mutex_init(dat->forks + i++, NULL))
+		if (pthread_mutex_init(dat->fork_mutex + i++, NULL))
 			return (printf("Mutex init failed\n"), 1);
 	gettimeofday(&dat->start_time, NULL);
-	dat->start_time.tv_sec += 1;
-	return (err);
+	return (dat->start_time.tv_sec += 1, err);
 }
 
 void	delete_dat(t_philo_dat *dat)
@@ -73,11 +73,11 @@ void	delete_dat(t_philo_dat *dat)
 
 	i = 0;
 	while (i < dat->num_philo)
-		pthread_mutex_destroy(dat->forks + i++);
-	free(dat->forks);
+		pthread_mutex_destroy(dat->fork_mutex + i++);
+	free(dat->fork_mutex);
+	free(dat->fork);
 	free(dat->philos);
 	free(dat->threads);
-	free(dat->fork_state);
 }
 
 pthread_t	*init_threads(t_philo_dat *dat)
@@ -93,6 +93,8 @@ pthread_t	*init_threads(t_philo_dat *dat)
 		dat->philos[i].num = i + 1;
 		dat->philos[i].eaten = 0;
 		dat->philos[i].state = 0;
+		dat->philos[i].left_fork = i;
+		dat->philos[i].right_fork = (i + 1) % dat->num_philo;
 		dat->philos[i].last_meal = dat->start_time;
 		pthread_create(&threads[i], NULL,
 			(void *)(void *)philo_start, dat->philos + i);

@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:11:15 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/06 13:33:01 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/06 16:21:47 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ typedef struct s_philo_dat
 	int			sleep_time;
 	int			to_eat;
 	char		death;
-	t_mutex		*forks;
-	char		*fork_state;
+	t_mutex		*fork_mutex;
+	char		*fork;
 	pthread_t	*threads;
 	t_tv		start_time;
 	t_philo		*philos;
@@ -50,6 +50,8 @@ typedef struct s_philo
 	t_philo_dat	*dat;
 	int			eaten;
 	char		state;
+	int			left_fork;
+	int			right_fork;
 	t_tv		action_time;
 	t_tv		last_meal;
 }	t_philo;
