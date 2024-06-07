@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 11:41:32 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/06 16:43:03 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/07 15:10:49 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,15 @@ void	philo_start(t_philo *philo)
 		usleep(100);
 	while (!philo->dat->death)
 	{
-		if (time_dif(philo->last_meal, NULL) > philo->dat->die_time * 1000)
-		{
-			philo->dat->death = 1;
-			print_action(philo, &philo->action_time, "died");
-		}
+		if (philo_death(philo, time_dif(philo->last_meal, NULL)))
+			break ;
 		else if (philo->state == 0)
 			philo_eat(philo);
 		else if (philo->state == 1)
-			philo_sleep(philo);
+		{
+			print_action(philo, &philo->action_time, "is sleeping");
+			philo->state = 2;
+		}
 		else if (philo->state >= 2 && time_dif(philo->action_time, NULL)
 			> philo->dat->sleep_time * 1000)
 			philo_think(philo);
@@ -69,11 +69,8 @@ void	philo_eat(t_philo *philo)
 	while (!philo->dat->death)
 	{
 		action_dif = time_dif(philo->last_meal, NULL);
-		if (action_dif > philo->dat->die_time * 1000)
-		{
-			philo->dat->death = 1;
-			print_action(philo, &philo->action_time, "died");
-		}
+		if (philo_death(philo, action_dif))
+			break ;
 		if (action_dif > philo->dat->eat_time * 1000)
 			break ;
 		usleep(10);
@@ -87,10 +84,22 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_unlock(&(philo->dat->fork_mutex[philo->right_fork]));
 }
 
-void	philo_sleep(t_philo *philo)
+int	philo_death(t_philo *philo, int last_meal)
 {
-	print_action(philo, &philo->action_time, "is sleeping");
-	philo->state = 2;
+	int	out;
+
+	out = 0;
+	pthread_mutex_lock(&philo->dat->death_lock);
+	if (philo->dat->death)
+		out = 1;
+	else if (last_meal > philo->dat->die_time * 1000)
+	{
+		philo->dat->death = 1;
+		print_action(philo, &philo->action_time, "died");
+		out = 1;
+	}
+	pthread_mutex_unlock(&philo->dat->death_lock);
+	return (out);
 }
 
 void	philo_think(t_philo *philo)

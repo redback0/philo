@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:29:24 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/06 19:59:05 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/07 15:09:12 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int	main(int ac, char *av[])
 int	set_philo_dat(int ac, char **av, t_philo_dat *dat)
 {
 	int	err;
-	int	i;
 
 	err = 0;
 	dat->num_philo = ft_atou_strict(av[1], &err);
@@ -62,12 +61,34 @@ int	set_philo_dat(int ac, char **av, t_philo_dat *dat)
 	dat->fork_mutex = (t_mutex *)malloc(dat->num_philo
 			* sizeof(*(dat->fork_mutex)));
 	dat->fork = (char *)malloc(dat->num_philo * sizeof(char));
-	i = 0;
-	while (i < dat->num_philo)
-		if (pthread_mutex_init(dat->fork_mutex + i++, NULL))
-			return (printf("Mutex init failed\n"), 1);
+	if (set_mutexes(dat))
+		return (1);
 	gettimeofday(&dat->start_time, NULL);
 	return (dat->start_time.tv_sec += 1, err);
+}
+
+int	set_mutexes(t_philo_dat *dat)
+{
+	int	i;
+
+	if (pthread_mutex_init(&dat->print_lock, NULL))
+		return (1);
+	if (pthread_mutex_init(&dat->death_lock, NULL))
+		return (pthread_mutex_destroy(&dat->print_lock), 1);
+	i = 0;
+	while (i < dat->num_philo)
+	{
+		if (pthread_mutex_init(dat->fork_mutex + i++, NULL))
+		{
+			pthread_mutex_destroy(&dat->print_lock);
+			pthread_mutex_destroy(&dat->death_lock);
+			i -= 2;
+			while (i >= 0)
+				pthread_mutex_destroy(dat->fork_mutex + i--);
+			return (1);
+		}
+	}
+	return (0);
 }
 
 void	delete_dat(t_philo_dat *dat)
@@ -77,6 +98,8 @@ void	delete_dat(t_philo_dat *dat)
 	i = 0;
 	while (i < dat->num_philo)
 		pthread_mutex_destroy(dat->fork_mutex + i++);
+	pthread_mutex_destroy(&dat->print_lock);
+	pthread_mutex_destroy(&dat->death_lock);
 	free(dat->fork_mutex);
 	free(dat->fork);
 	free(dat->philos);
