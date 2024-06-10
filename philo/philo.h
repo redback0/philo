@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:11:15 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/10 14:19:19 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 15:21:32 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 [TIMES_TO_EAT]\n"
 
 # define C_RED		"\x1b[31m"
+# define C_GRAY		"\x1b[1;30m"
 # define C_CYAN		"\x1b[36m"
 # define C_GREEN	"\x1b[32m"
 # define C_ORANGE	"\x1b[33m"

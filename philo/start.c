@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 11:41:32 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/10 14:19:42 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 15:22:42 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ static int	pickup_forks(t_philo *philo)
 		return (1);
 	}
 	philo->dat->fork[philo->left_fork] = 1;
-	print_action(philo, &philo->action_time, "has taken a fork");
+	print_action(philo, &philo->action_time, C_GRAY"has taken a fork"C_NC);
 	philo->dat->fork[philo->right_fork] = 1;
-	print_action(philo, &philo->action_time, "has taken a fork");
+	print_action(philo, &philo->action_time, C_GRAY"has taken a fork"C_NC);
 	pthread_mutex_unlock(&(philo->dat->fork_mutex[philo->left_fork]));
 	pthread_mutex_unlock(&(philo->dat->fork_mutex[philo->right_fork]));
 	pthread_mutex_unlock(&philo->dat->eat_lock);
