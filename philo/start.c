@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 11:41:32 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/10 13:59:31 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 14:19:42 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 void	philo_start(t_philo *philo)
 {
 	while (time_dif(philo->dat->start_time, NULL) < 0)
-		usleep(10);
+		usleep(50);
 	if (philo->num % 2)
-		usleep(philo->dat->eat_time * 100);
+		usleep(philo->dat->eat_time * 500);
 	while (1)
 	{
 		if (philo_death(philo, time_dif(philo->last_meal, NULL)))
@@ -32,7 +32,7 @@ void	philo_start(t_philo *philo)
 		else if (philo->state >= 2 && time_dif(philo->action_time, NULL)
 			> philo->dat->sleep_time * 1000)
 			philo_think(philo);
-		usleep(10);
+		usleep(philo->dat->break_time);
 	}
 }
 
@@ -76,7 +76,7 @@ void	philo_eat(t_philo *philo)
 			break ;
 		if (action_dif > philo->dat->eat_time * 1000)
 			break ;
-		usleep(10);
+		usleep(philo->dat->break_time);
 	}
 	add_mutex_int(&philo->eaten, &philo->eaten_lock, 1);
 	pthread_mutex_lock(&(philo->dat->fork_mutex[philo->left_fork]));

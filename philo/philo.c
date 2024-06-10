@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:29:24 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/10 13:42:42 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 14:20:43 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ int	set_philo_dat(int ac, char **av, t_philo_dat *dat)
 	dat->eat_time = ft_atou_strict(av[3], &err);
 	dat->sleep_time = ft_atou_strict(av[4], &err);
 	dat->death = 0;
+	dat->break_time = 10;
+	if (dat->num_philo > 10)
+		dat->break_time = dat->num_philo;
 	if (ac == 6)
 		dat->to_eat = ft_atou_strict(av[5], &err);
 	else

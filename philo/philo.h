@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:11:15 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/10 13:58:13 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 14:19:19 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_philo_dat
 	int			die_time;
 	int			eat_time;
 	int			sleep_time;
+	int			break_time;
 	int			to_eat;
 	int			death;
 	t_mutex		death_lock;
