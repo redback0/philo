@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:11:15 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/10 13:12:07 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:58:13 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@
 
 # define USAGE "./philo NUM_PHILOS TIME_TO_DIE TIME_TO_EAT TIME_TO_SLEEP \
 [TIMES_TO_EAT]\n"
+
+# define C_RED		"\x1b[31m"
+# define C_CYAN		"\x1b[36m"
+# define C_GREEN	"\x1b[32m"
+# define C_ORANGE	"\x1b[33m"
+# define C_NC		"\x1b[0m"
 
 typedef unsigned int	t_uint;
 typedef pthread_mutex_t	t_mutex;

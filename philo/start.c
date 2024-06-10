@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 11:41:32 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/10 13:20:51 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:59:31 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	philo_start(t_philo *philo)
 	while (time_dif(philo->dat->start_time, NULL) < 0)
 		usleep(10);
 	if (philo->num % 2)
-		usleep(200);
+		usleep(philo->dat->eat_time * 100);
 	while (1)
 	{
 		if (philo_death(philo, time_dif(philo->last_meal, NULL)))
@@ -26,7 +26,7 @@ void	philo_start(t_philo *philo)
 			philo_eat(philo);
 		else if (philo->state == 1)
 		{
-			print_action(philo, &philo->action_time, "is sleeping");
+			print_action(philo, &philo->action_time, C_CYAN"is sleeping"C_NC);
 			philo->state = 2;
 		}
 		else if (philo->state >= 2 && time_dif(philo->action_time, NULL)
@@ -67,7 +67,7 @@ void	philo_eat(t_philo *philo)
 
 	if (pickup_forks(philo))
 		return ;
-	print_action(philo, &philo->last_meal, "is eating");
+	print_action(philo, &philo->last_meal, C_ORANGE"is eating"C_NC);
 	philo->state = 1;
 	while (1)
 	{
@@ -98,7 +98,7 @@ int	philo_death(t_philo *philo, int last_meal)
 	else if (last_meal > philo->dat->die_time * 1000)
 	{
 		philo->dat->death = 1;
-		print_action(philo, &philo->action_time, "died");
+		print_action(philo, &philo->action_time, C_RED"died"C_NC);
 		out = 1;
 	}
 	pthread_mutex_unlock(&philo->dat->death_lock);
@@ -107,7 +107,9 @@ int	philo_death(t_philo *philo, int last_meal)
 
 void	philo_think(t_philo *philo)
 {
-	print_action(philo, &philo->action_time, "is thinking");
+	print_action(philo, &philo->action_time, C_GREEN"is thinking"C_NC);
 	philo->state = 0;
+	if (philo->dat->eat_time > philo->dat->sleep_time)
+		usleep((philo->dat->eat_time - philo->dat->sleep_time) * 1000);
 	usleep(100);
 }

@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:56:04 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/10 12:50:22 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 14:00:28 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,6 @@ void	print_action(t_philo *philo, t_tv *time, char *action)
 
 	pthread_mutex_lock(&philo->dat->print_lock);
 	ms = time_dif(philo->dat->start_time, time) / 1000;
-	printf("%d %d %s\n", ms, philo->num, action);
+	printf("%8d    %-4d %s\n", ms, philo->num, action);
 	pthread_mutex_unlock(&philo->dat->print_lock);
 }

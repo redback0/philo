@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:29:24 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/10 13:29:25 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:42:42 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ int	set_philo_dat(int ac, char **av, t_philo_dat *dat)
 		dat->to_eat = ft_atou_strict(av[5], &err);
 	else
 		dat->to_eat = -1;
-	if (dat->eat_time > dat->sleep_time)
-		dat->sleep_time = dat->eat_time;
 	if (err)
 		return (err);
 	dat->philos = (t_philo *)malloc(dat->num_philo * sizeof(*(dat->philos)));
