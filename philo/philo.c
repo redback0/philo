@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:29:24 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/07 15:09:12 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:29:25 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@ int	main(int ac, char *av[])
 	t_philo_dat	dat;
 	int			i;
 
-	if (ac < 5 || ac > 7)
+	if (ac < 5 || ac > 6 || set_philo_dat(ac, av, &dat))
 		return (printf(USAGE), 0);
-	set_philo_dat(ac, av, &dat);
 	i = 0;
 	while (i < dat.num_philo)
 		dat.fork[i++] = 0;
@@ -27,17 +26,16 @@ int	main(int ac, char *av[])
 	i = 0;
 	if (dat.to_eat > 0)
 	{
-		while (!dat.death && i < dat.num_philo)
+		while (!check_mutex_int(&dat.death, &dat.death_lock)
+			&& i < dat.num_philo)
 		{
-			if (dat.philos[i].eaten >= dat.to_eat)
+			if (check_mutex_int(&dat.philos[i].eaten, &dat.philos[i].eaten_lock)
+				>= dat.to_eat)
 				i++;
 			usleep(1000);
 		}
-		dat.death = 1;
+		add_mutex_int(&dat.death, &dat.death_lock, 1);
 	}
-	i = 0;
-	while (i < dat.num_philo)
-		pthread_join(dat.threads[i++], NULL);
 	delete_dat(&dat);
 }
 
@@ -55,6 +53,8 @@ int	set_philo_dat(int ac, char **av, t_philo_dat *dat)
 		dat->to_eat = ft_atou_strict(av[5], &err);
 	else
 		dat->to_eat = -1;
+	if (dat->eat_time > dat->sleep_time)
+		dat->sleep_time = dat->eat_time;
 	if (err)
 		return (err);
 	dat->philos = (t_philo *)malloc(dat->num_philo * sizeof(*(dat->philos)));
@@ -75,6 +75,11 @@ int	set_mutexes(t_philo_dat *dat)
 		return (1);
 	if (pthread_mutex_init(&dat->death_lock, NULL))
 		return (pthread_mutex_destroy(&dat->print_lock), 1);
+	if (pthread_mutex_init(&dat->eat_lock, NULL))
+	{
+		pthread_mutex_destroy(&dat->death_lock);
+		return (pthread_mutex_destroy(&dat->print_lock), 1);
+	}
 	i = 0;
 	while (i < dat->num_philo)
 	{
@@ -85,7 +90,7 @@ int	set_mutexes(t_philo_dat *dat)
 			i -= 2;
 			while (i >= 0)
 				pthread_mutex_destroy(dat->fork_mutex + i--);
-			return (1);
+			return (pthread_mutex_destroy(&dat->eat_lock), 1);
 		}
 	}
 	return (0);
@@ -97,9 +102,16 @@ void	delete_dat(t_philo_dat *dat)
 
 	i = 0;
 	while (i < dat->num_philo)
+		pthread_join(dat->threads[i++], NULL);
+	i = 0;
+	while (i < dat->num_philo)
+	{
 		pthread_mutex_destroy(dat->fork_mutex + i++);
+		pthread_mutex_destroy(&dat->philos[i].eaten_lock);
+	}
 	pthread_mutex_destroy(&dat->print_lock);
 	pthread_mutex_destroy(&dat->death_lock);
+	pthread_mutex_destroy(&dat->eat_lock);
 	free(dat->fork_mutex);
 	free(dat->fork);
 	free(dat->philos);
@@ -118,6 +130,7 @@ pthread_t	*init_threads(t_philo_dat *dat)
 		dat->philos[i].dat = dat;
 		dat->philos[i].num = i + 1;
 		dat->philos[i].eaten = 0;
+		pthread_mutex_init(&dat->philos[i].eaten_lock, NULL);
 		dat->philos[i].state = 0;
 		dat->philos[i].left_fork = i;
 		dat->philos[i].right_fork = (i + 1) % dat->num_philo;

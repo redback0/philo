@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:56:04 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/07 14:34:58 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 12:50:22 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,23 @@ t_uint	ft_atou_strict(const char *str, int *err)
 	return (out);
 }
 
+int	check_mutex_int(int *addr, t_mutex *lock)
+{
+	int	out;
+
+	pthread_mutex_lock(lock);
+	out = *addr;
+	pthread_mutex_unlock(lock);
+	return (out);
+}
+
+void	add_mutex_int(int *addr, t_mutex *lock, int add)
+{
+	pthread_mutex_lock(lock);
+	*addr += add;
+	pthread_mutex_unlock(lock);
+}
+
 int	time_dif(t_tv start, t_tv *time)
 {
 	t_tv	tmp;
@@ -51,6 +68,6 @@ void	print_action(t_philo *philo, t_tv *time, char *action)
 
 	pthread_mutex_lock(&philo->dat->print_lock);
 	ms = time_dif(philo->dat->start_time, time) / 1000;
-	printf("%8d %d %s\n", ms, philo->num, action);
+	printf("%d %d %s\n", ms, philo->num, action);
 	pthread_mutex_unlock(&philo->dat->print_lock);
 }

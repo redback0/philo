@@ -2,7 +2,7 @@ CC := cc
 CFLAGS = -Wall -Wextra -Werror $(DEBUG_FLAGS)
 DEBUG_FLAGS =
 ifeq ($(DEBUG), 1)
-	DEBUG_FLAGS = -g -DDEBUG=1
+	DEBUG_FLAGS = -g -DDEBUG=1 -fsanitize=thread
 	export DEBUG
 endif
 
@@ -26,7 +26,7 @@ all: $(NAME)
 debug: fclean debug_cflags $(NAME)
 
 debug_cflags:
-	@$(eval DEBUG_FLAGS = -g -DDEBUG=1)
+	@$(eval DEBUG_FLAGS = -g -DDEBUG=1 -fsanitize=thread)
 	@$(eval export DEBUG=1)
 
 $(NAME): $(OBJ)

@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:11:15 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/07 15:05:31 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:12:07 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,11 @@ typedef struct s_philo_dat
 	int			eat_time;
 	int			sleep_time;
 	int			to_eat;
-	char		death;
+	int			death;
 	t_mutex		death_lock;
 	t_mutex		*fork_mutex;
 	t_mutex		print_lock;
+	t_mutex		eat_lock;
 	char		*fork;
 	pthread_t	*threads;
 	t_tv		start_time;
@@ -51,6 +52,7 @@ typedef struct s_philo
 	int			num;
 	t_philo_dat	*dat;
 	int			eaten;
+	t_mutex		eaten_lock;
 	char		state;
 	int			left_fork;
 	int			right_fork;
@@ -69,6 +71,10 @@ void		philo_start(t_philo *philo);
 int			philo_death(t_philo *philo, int last_meal);
 void		philo_eat(t_philo *philo);
 void		philo_think(t_philo *philo);
+
+// mutex functions
+int			check_mutex_int(int *addr, t_mutex *lock);
+void		add_mutex_int(int *addr, t_mutex *lock, int add);
 
 // libft functions
 t_uint		ft_atou_strict(const char *str, int *err);

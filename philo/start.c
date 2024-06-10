@@ -6,7 +6,7 @@
 /*   By: njackson <njackson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 11:41:32 by njackson          #+#    #+#             */
-/*   Updated: 2024/06/07 15:10:49 by njackson         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:20:51 by njackson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ void	philo_start(t_philo *philo)
 	while (time_dif(philo->dat->start_time, NULL) < 0)
 		usleep(10);
 	if (philo->num % 2)
-		usleep(100);
-	while (!philo->dat->death)
+		usleep(200);
+	while (1)
 	{
 		if (philo_death(philo, time_dif(philo->last_meal, NULL)))
 			break ;
@@ -40,6 +40,7 @@ static int	pickup_forks(t_philo *philo)
 {
 	if (philo->left_fork == philo->right_fork)
 		return (1);
+	pthread_mutex_lock(&philo->dat->eat_lock);
 	pthread_mutex_lock(&(philo->dat->fork_mutex[philo->left_fork]));
 	pthread_mutex_lock(&(philo->dat->fork_mutex[philo->right_fork]));
 	if (philo->dat->fork[philo->left_fork]
@@ -47,6 +48,7 @@ static int	pickup_forks(t_philo *philo)
 	{
 		pthread_mutex_unlock(&(philo->dat->fork_mutex[philo->left_fork]));
 		pthread_mutex_unlock(&(philo->dat->fork_mutex[philo->right_fork]));
+		pthread_mutex_unlock(&philo->dat->eat_lock);
 		return (1);
 	}
 	philo->dat->fork[philo->left_fork] = 1;
@@ -55,6 +57,7 @@ static int	pickup_forks(t_philo *philo)
 	print_action(philo, &philo->action_time, "has taken a fork");
 	pthread_mutex_unlock(&(philo->dat->fork_mutex[philo->left_fork]));
 	pthread_mutex_unlock(&(philo->dat->fork_mutex[philo->right_fork]));
+	pthread_mutex_unlock(&philo->dat->eat_lock);
 	return (0);
 }
 
@@ -66,7 +69,7 @@ void	philo_eat(t_philo *philo)
 		return ;
 	print_action(philo, &philo->last_meal, "is eating");
 	philo->state = 1;
-	while (!philo->dat->death)
+	while (1)
 	{
 		action_dif = time_dif(philo->last_meal, NULL);
 		if (philo_death(philo, action_dif))
@@ -75,7 +78,7 @@ void	philo_eat(t_philo *philo)
 			break ;
 		usleep(10);
 	}
-	philo->eaten++;
+	add_mutex_int(&philo->eaten, &philo->eaten_lock, 1);
 	pthread_mutex_lock(&(philo->dat->fork_mutex[philo->left_fork]));
 	pthread_mutex_lock(&(philo->dat->fork_mutex[philo->right_fork]));
 	philo->dat->fork[philo->num - 1] = 0;
